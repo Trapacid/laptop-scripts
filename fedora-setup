@@ -1,0 +1,94 @@
+#!/bin/bash
+
+CHROMERPM=google-chrome-stable_current_x86_64.rpm
+DNFINSTALL="sudo dnf install -y"
+DNFGROUPINSTALL="sudo dnf groupinstall -y"
+DNFREMOVE="sudo dnf remove -y"
+
+echo "Updating first"
+sudo dnf update -y
+
+echo "Installing RPM Fusion free & non-free"
+$DNFINSTALL https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+echo "Installing groups aka bloat because big SSD"
+$DNFGROUPINSTALL "System Tools" "Sound and Video" "Security Lab" "Office/Productivity" "C Development Tools and Libraries" "Administration Tools" "Books and Guides" "Cloud Management Tools" "Development Tools" "Editors"
+
+echo "Installing some utilities & libs"
+UTILS1="htop wget curl neofetch cryptopp"
+$DNFINSTALL $UTILS1
+
+echo "Installing yubikey software"
+UTILS2="yubioath-desktop ykpers ykclient yubikey-manager libyubikey"
+$DNFINSTALL $UTILS2
+
+echo "Installing GPG and importing public key"
+UTILS3="gnupg"
+PUBLICKEY="https://gist.githubusercontent.com/Trapacid/4cb8d34f1072fdc2708e5956bc19f890/raw/a2ef3811c5f5201f5e0b9e0e94f62ec28bf9fd31/public.gpg"
+MASTERKEY="0xEFEC3E75AAFD7BC7"
+
+$DNFINSTALL $UTILS3
+wget $PUBLICKEY
+gpg --import public.gpg
+echo "//=====================================//"
+echo "//=====================================//"
+echo "// trust; 5; y; quit to ultimatley trust for yubikey GPG to work //"
+echo "//=====================================//"
+echo "//=====================================//"
+gpg --edit-key $MASTERKEY
+
+echo "Setting git config"
+GITCONFIG="git config --global"
+SIGNINGKEY=2F5AA6FADF6C78CF
+$GITCONFIG user.name "Trapacid"
+$GITCONFIG user.email "ashley@weeb.tech"
+$GITCONFIG user.signingkey "$SIGNINGKEY"
+$GITCONFIG commit.gpgsign true
+
+echo "Setting up GPG/SSH with yubikey"
+DEPS1="pinentry-curses pcsc-lite pcsc-lite-libs gnupg2-smime"
+echo "Checking entropy"
+ENTROPY=$(cat /proc/sys/kernel/random/entropy_avail)
+AGENTCONFIG='export GPG_TTY="$(tty)"
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+gpgconf --launch gpg-agent';
+if [ $ENTROPY -le 1000 ]
+then
+	echo "Entropy is too low"
+elif [ $ENTROPY -ge 2250 ]
+then
+	echo "Entropy is good. Continuing"
+else
+	echo "unable to read entropy or all conditions failed"
+fi
+echo "Downloading hardened gpg-agent.conf and gpg.conf"
+wget -O ~/.gnupg/gpg-agent.conf https://raw.githubusercontent.com/drduh/config/master/gpg-agent.conf
+wget -O ~/.gnupg/gpg.conf https://raw.githubusercontent.com/drduh/config/master/gpg.conf
+chmod 600 ~/.gnupg/gpg.conf
+echo "Adding GPG_TTY and gpg agent to rc file"
+if [ -f ~/.zshrc ]
+then
+	echo "Adding to .zshrc"
+	echo -e "$AGENTCONFIG" >> ~/.zshrc
+elif [ -f ~/.bashrc ]
+then
+	echo "Adding to .bashrc"
+	echo -e "$AGENTCONFIG" >> ~/.bashrc
+else
+	echo "Fallingback to writing to .profile. zshrc and bashrc do not exist"
+	echo -e "$AGENTCONFIG" >> ~/.profile
+fi
+
+echo "Installing firefox and chromium w/Widevine, purging Midori"
+BROWSERS="chromium firefox"
+DRMUTILS=libva-utils
+OUTPUTFOLDER1=/tmp/google-chrome-rpm
+
+$DNFREMOVE midori
+$DNFINSTALL $BROWSERS $DRMUTILS
+mkdir $OUTPUTFOLDER1
+wget -P $OUTPUTFOLDER1 https://dl.google.com/linux/direct/$CHROMERPM
+cd $OUTPUTFOLDER1
+rpm2cpio ./$CHROMERPM | cpio -idmv
+cd opt/google/chrome
+sudo mv WidevineCdm /usr/lib64/chromium-browser
