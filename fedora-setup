@@ -4,6 +4,9 @@ CHROMERPM=google-chrome-stable_current_x86_64.rpm
 DNFINSTALL="sudo dnf install -y"
 DNFGROUPINSTALL="sudo dnf groupinstall -y"
 DNFREMOVE="sudo dnf remove -y"
+ROCKBOXUTILITY="http://download.rockbox.org/rbutil/linux/RockboxUtility-v1.4.1-64bit.tar.bz2"
+ROCKBOXFOLDER="RockboxUtility-v1.4.1-64bit"
+ROCKBOXTAR="RockboxUtility-v1.4.1-64bit.tar.bz2"
 
 echo "Updating first"
 sudo dnf update -y
@@ -15,7 +18,7 @@ echo "Installing groups aka bloat because big SSD"
 $DNFGROUPINSTALL "System Tools" "Sound and Video" "Security Lab" "Office/Productivity" "C Development Tools and Libraries" "Administration Tools" "Books and Guides" "Cloud Management Tools" "Development Tools" "Editors"
 
 echo "Installing some utilities & libs"
-UTILS1="htop wget curl neofetch cryptopp"
+UTILS1="htop wget curl neofetch cryptopp neovim"
 $DNFINSTALL $UTILS1
 
 echo "Installing yubikey software"
@@ -36,6 +39,8 @@ echo "// trust; 5; y; quit to ultimatley trust for yubikey GPG to work //"
 echo "//=====================================//"
 echo "//=====================================//"
 gpg --edit-key $MASTERKEY
+mv public.gpg $HOME/Documents
+echo "public.gpg is in $HOME/Documents"
 
 echo "Setting git config"
 GITCONFIG="git config --global"
@@ -45,7 +50,7 @@ $GITCONFIG user.email "ashley@weeb.tech"
 $GITCONFIG user.signingkey "$SIGNINGKEY"
 $GITCONFIG commit.gpgsign true
 $GITCONFIG color.ui true
-$GITCONFIG core.editor vim
+$GITCONFIG core.editor nvim
 
 echo "Setting up GPG/SSH with yubikey"
 DEPS1="pinentry-curses pcsc-lite pcsc-lite-libs gnupg2-smime"
@@ -64,21 +69,21 @@ else
 	echo "unable to read entropy or all conditions failed"
 fi
 echo "Downloading hardened gpg-agent.conf and gpg.conf"
-wget -O ~/.gnupg/gpg-agent.conf https://raw.githubusercontent.com/drduh/config/master/gpg-agent.conf
-wget -O ~/.gnupg/gpg.conf https://raw.githubusercontent.com/drduh/config/master/gpg.conf
-chmod 600 ~/.gnupg/gpg.conf
+wget -O $HOME/.gnupg/gpg-agent.conf https://raw.githubusercontent.com/drduh/config/master/gpg-agent.conf
+wget -O $HOME/.gnupg/gpg.conf https://raw.githubusercontent.com/drduh/config/master/gpg.conf
+chmod 600 $HOME/.gnupg/gpg.conf
 echo "Adding GPG_TTY and gpg agent to rc file"
-if [ -f ~/.zshrc ]
+if [ -f $HOME/.zshrc ]
 then
 	echo "Adding to .zshrc"
-	echo -e "$AGENTCONFIG" >> ~/.zshrc
-elif [ -f ~/.bashrc ]
+	echo -e "$AGENTCONFIG" >> $HOME/.zshrc
+elif [ -f $HOME/.bashrc ]
 then
 	echo "Adding to .bashrc"
-	echo -e "$AGENTCONFIG" >> ~/.bashrc
+	echo -e "$AGENTCONFIG" >> $HOME/.bashrc
 else
 	echo "Fallingback to writing to .profile. zshrc and bashrc do not exist"
-	echo -e "$AGENTCONFIG" >> ~/.profile
+	echo -e "$AGENTCONFIG" >> $HOME/.profile
 fi
 
 echo "Installing firefox and chromium w/Widevine, purging Midori"
@@ -94,3 +99,22 @@ cd $OUTPUTFOLDER1
 rpm2cpio ./$CHROMERPM | cpio -idmv
 cd opt/google/chrome
 sudo mv WidevineCdm /usr/lib64/chromium-browser
+
+echo "Downloading RockboxUtility"
+cd $HOME/Downloads
+wget $ROCKBOXUTILITY
+tar -xvf $ROCKBOXTAR
+sudo mv $ROCKBOXFOLDER/RockboxUtility /usr/local/bin
+rm -rf $HOME/Downloads/$ROCKBOXFOLDER $HOME/Downloads/$ROCKBOXTAR
+
+echo "Downloading Android SDK platform-tools and adding to PATH"
+PLATFORMTOOLSURL="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
+PLATFORMTOOLSZIP="platform-tools-latest-linux.zip"
+cd $HOME/Downloads
+wget $PLATFORMTOOLSURL
+unzip $PLATFORMTOOLSZIP
+mv platform-tools $HOME
+rm $PLATFORMTOOLSZIP
+echo "//====================================//"
+echo "Set PATH to include $HOME/platform-tools"
+echo "//====================================//"
