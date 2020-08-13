@@ -44,6 +44,8 @@ $GITCONFIG user.name "Trapacid"
 $GITCONFIG user.email "ashley@weeb.tech"
 $GITCONFIG user.signingkey "$SIGNINGKEY"
 $GITCONFIG commit.gpgsign true
+$GITCONFIG color.ui true
+$GITCONFIG core.editor vim
 
 echo "Setting up GPG/SSH with yubikey"
 DEPS1="pinentry-curses pcsc-lite pcsc-lite-libs gnupg2-smime"
