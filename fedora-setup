@@ -26,7 +26,7 @@ echo "Installing Spotify"
 $DNFINSTALL lpf-spotify-client
 lpf update spotify-client
 
-echo "Enabling automatic updates"
+echo "Enabling automatic notify updates"
 $DNFINSTALL dnf-automatic
 sudo systemctl enable --now dnf-automatic-notifyonly.timer
 
@@ -37,6 +37,30 @@ $DNFINSTALL $UTILS1
 echo "Installing yubikey software"
 UTILS2="yubioath-desktop ykpers ykclient yubikey-manager libyubikey"
 $DNFINSTALL $UTILS2
+
+echo "Installing and setting ZSH as default shell"
+sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+
+echo "Installing powerlevel10k w/instant prompt support"
+wget -P /tmp "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf"
+wget -P /tmp "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf"
+wget -P /tmp "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf"
+wget -P /tmp "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf"
+sudo mkdir "/usr/share/fonts/Meslo NF"
+sudo mv /tmp/*.ttf "/usr/share/fonts/Meslo NF"
+sudo fc-cache -v
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+echo "//========================================================="
+echo "// Run "p10k configure" in zsh and enable instant prompt //"
+echo "// Set ZSH_THEME to powerlevel10k/powerlevel10k in zshrc"
+echo "//========================================================="
+
+echo "Installing zsh-autosuggestions and zsh-syntax-highlighting"
+ZSHTOOLS="zsh-autosuggestions zsh-syntax-highlighting"
+$DNFINSTALL $ZSHTOOLS
+echo "//========================================================="
+echo "Add zsh-syntaxhighlighting and zsh-autosuggestions to zshrc plugins (and vscode :D"
+echo "//========================================================="
 
 echo "Installing GPG and importing public key"
 UTILS3="gnupg"
@@ -98,9 +122,9 @@ else
 	echo "Fallingback to writing to .profile. zshrc and bashrc do not exist"
 	echo -e "$AGENTCONFIG" >> $HOME/.profile
 fi
-
+source $HOME/.bashrc
 echo "//============================//"
-echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
+echo "Remember to plug in yubikey and run gpg --card-status to ensure GPG sees the card"
 echo "//============================//"
 
 echo "Installing firefox and chromium w/Widevine, purging Midori"
@@ -128,7 +152,7 @@ echo "Installing Java 1.8.0 (8) & JDK"
 JAVA="java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64"
 $DNFINSTALL $JAVA
 
-echo "Downloading Android SDK platform-tools and adding to PATH"
+echo "Downloading Android SDK platform-tools"
 PLATFORMTOOLSURL="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
 PLATFORMTOOLSZIP="platform-tools-latest-linux.zip"
 cd $HOME/Downloads
