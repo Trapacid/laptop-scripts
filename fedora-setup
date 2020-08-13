@@ -59,7 +59,7 @@ echo "Installing zsh-autosuggestions and zsh-syntax-highlighting"
 ZSHTOOLS="zsh-autosuggestions zsh-syntax-highlighting"
 $DNFINSTALL $ZSHTOOLS
 echo "//========================================================="
-echo "Add zsh-syntaxhighlighting and zsh-autosuggestions to zshrc plugins (and vscode :D"
+echo "Add zsh-syntaxhighlighting and zsh-autosuggestions to zshrc plugins (and vscode :D)"
 echo "//========================================================="
 
 echo "Installing GPG and importing public key"
@@ -114,15 +114,16 @@ if [ -f $HOME/.zshrc ]
 then
 	echo "Adding to .zshrc"
 	echo -e "$AGENTCONFIG" >> $HOME/.zshrc
+	source $HOME/.zshrc
 elif [ -f $HOME/.bashrc ]
 then
 	echo "Adding to .bashrc"
 	echo -e "$AGENTCONFIG" >> $HOME/.bashrc
+	source $HOME/.bashrc
 else
 	echo "Fallingback to writing to .profile. zshrc and bashrc do not exist"
 	echo -e "$AGENTCONFIG" >> $HOME/.profile
 fi
-source $HOME/.bashrc
 echo "//============================//"
 echo "Remember to plug in yubikey and run gpg --card-status to ensure GPG sees the card"
 echo "//============================//"
