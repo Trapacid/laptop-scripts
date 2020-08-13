@@ -17,6 +17,19 @@ $DNFINSTALL https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$
 echo "Installing groups aka bloat because big SSD"
 $DNFGROUPINSTALL "System Tools" "Sound and Video" "Security Lab" "Office/Productivity" "C Development Tools and Libraries" "Administration Tools" "Books and Guides" "Cloud Management Tools" "Development Tools" "Editors"
 
+echo "Installing media codecs (gstreamer, LAME, h264, etc)"
+$DNFINSTALL gstreamer1-plugins-{bad-\*,good-\*,base} gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel
+$DNFINSTALL lame\* --exclude=lame-devel
+sudo dnf group -y upgrade --with-optional Multimedia
+
+echo "Installing Spotify"
+$DNFINSTALL lpf-spotify-client
+lpf update spotify-client
+
+echo "Enabling automatic updates"
+$DNFINSTALL dnf-automatic
+sudo systemctl enable --now dnf-automatic-notifyonly.timer
+
 echo "Installing some utilities & libs"
 UTILS1="htop wget curl neofetch cryptopp neovim"
 $DNFINSTALL $UTILS1
@@ -86,6 +99,10 @@ else
 	echo -e "$AGENTCONFIG" >> $HOME/.profile
 fi
 
+echo "//============================//"
+echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
+echo "//============================//"
+
 echo "Installing firefox and chromium w/Widevine, purging Midori"
 BROWSERS="chromium firefox"
 DRMUTILS=libva-utils
@@ -106,6 +123,10 @@ wget $ROCKBOXUTILITY
 tar -xvf $ROCKBOXTAR
 sudo mv $ROCKBOXFOLDER/RockboxUtility /usr/local/bin
 rm -rf $HOME/Downloads/$ROCKBOXFOLDER $HOME/Downloads/$ROCKBOXTAR
+
+echo "Installing Java 1.8.0 (8) & JDK"
+JAVA="java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64"
+$DNFINSTALL $JAVA
 
 echo "Downloading Android SDK platform-tools and adding to PATH"
 PLATFORMTOOLSURL="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
