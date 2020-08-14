@@ -8,6 +8,8 @@ https://docs.fedoraproject.org/en-US/quick-docs/setup_rpmfusion/
 
 https://github.com/romkatv/powerlevel10k
 
+https://snapcraft.io/install/termius-app/fedora
+
 https://wiki.archlinux.org/index.php/Bash
 
 https://fedoraproject.org/wiki/HOWTO_Setup_Android_Development#Install_Android_SDK
