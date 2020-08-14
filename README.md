@@ -2,6 +2,10 @@
 i reinstall my distro about 500 times a year so this is to help me, plus learn bash.
 
 ## sources (not in any particular order)
+https://wiki.lineageos.org/devices/klte/install
+
+https://bitwarden.com/download/
+
 https://ohmyz.sh/#install
 
 https://docs.fedoraproject.org/en-US/quick-docs/setup_rpmfusion/

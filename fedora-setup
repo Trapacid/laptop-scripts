@@ -17,6 +17,21 @@ $DNFINSTALL https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$
 echo "Installing groups aka bloat because big SSD"
 $DNFGROUPINSTALL "System Tools" "Sound and Video" "Security Lab" "Office/Productivity" "C Development Tools and Libraries" "Administration Tools" "Books and Guides" "Cloud Management Tools" "Development Tools" "Editors"
 
+echo "Installing Bitwarden"
+BITWARDENURL="https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=rpm"
+BITWARDENRPM="Bitwarden-x86_64.rpm"
+wget -O $BITWARDENRPM $BITWARDENURL
+$DNFINSTALL $BITWARDENRPM
+rm $BITWARDENRPM
+
+echo "Installing heimdall from LineageOS"
+HEIMDALLURL="https://qc2.androidfilehost.com/dl/ZccawqhqJqj0Qpxt0ruMNg/1597467935/4349826312261708650/Heimdall-linux-master-012220.zip"
+HEIMDALLBINARIES="heimdall heimdall-frontend"
+wget -O heimdall.zip $HEIMDALLURL
+unzip heimdall.zip
+sudo mv $HEIMDALLBINARIES /usr/local/bin
+rm heimdall.zip
+
 echo "Installing Termius using Snap (sadly termius pls make RPM)"
 $DNFINSTALL snapd
 sudo ln -s /var/lib/snapd/snap /snap
