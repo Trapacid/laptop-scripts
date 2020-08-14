@@ -10,6 +10,8 @@ https://github.com/romkatv/powerlevel10k
 
 https://snapcraft.io/install/termius-app/fedora
 
+https://github.com/ohmyzsh/ohmyzsh/issues/7688
+
 https://wiki.archlinux.org/index.php/Bash
 
 https://fedoraproject.org/wiki/HOWTO_Setup_Android_Development#Install_Android_SDK
