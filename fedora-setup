@@ -128,19 +128,8 @@ echo "Downloading hardened gpg-agent.conf and gpg.conf"
 wget -O $HOME/.gnupg/gpg-agent.conf https://raw.githubusercontent.com/drduh/config/master/gpg-agent.conf
 wget -O $HOME/.gnupg/gpg.conf https://raw.githubusercontent.com/drduh/config/master/gpg.conf
 chmod 600 $HOME/.gnupg/gpg.conf
-echo "Adding GPG_TTY and gpg agent to rc file"
-if [ -f $HOME/.zshrc ]
-then
-	echo "Adding to .zshrc"
-	echo -e "$AGENTCONFIG" >> $HOME/.zshrc
-elif [ -f $HOME/.bashrc ]
-then
-	echo "Adding to .bashrc"
-	echo -e "$AGENTCONFIG" >> $HOME/.bashrc
-else
-	echo "Fallingback to writing to .profile. zshrc and bashrc do not exist"
-	echo -e "$AGENTCONFIG" >> $HOME/.profile
-fi
+echo "Importing .zshrc"
+mv .zshrc $HOME/.zshrc
 echo "//============================//"
 echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
 echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
