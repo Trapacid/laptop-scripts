@@ -132,7 +132,14 @@ wget -O $HOME/.gnupg/gpg-agent.conf https://raw.githubusercontent.com/drduh/conf
 wget -O $HOME/.gnupg/gpg.conf https://raw.githubusercontent.com/drduh/config/master/gpg.conf
 chmod 600 $HOME/.gnupg/gpg.conf
 echo "Importing .zshrc"
-mv .zshrc $HOME/.zshrc
+
+ZSHRCURL="https://raw.githubusercontent.com/Trapacid/laptop-scripts/master/.zshrc"
+
+if [ ! -f .zshrc ]; then
+	wget -O $HOME/.zshrc $ZSHRCURL
+else
+	mv .zshrc $HOME/.zshrc
+fi
 echo "//============================//"
 echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
 echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
