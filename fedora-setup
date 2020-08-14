@@ -143,6 +143,7 @@ else
 fi
 echo "//============================//"
 echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
+echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
 echo "//============================//"
 
 echo "Installing firefox and chromium w/Widevine, purging Midori"
