@@ -20,7 +20,7 @@ $DNFGROUPINSTALL "System Tools" "Sound and Video" "Security Lab" "Office/Product
 echo "Installing Termius using Snap (sadly termius pls make RPM)"
 $DNFINSTALL snapd
 sudo ln -s /var/lib/snapd/snap /snap
-sudo snap install termius-app
+echo 'Run "sudo snap install termius-app" to install termius'
 
 echo "Installing TLP and necessary deps"
 DEPS1="kernel-devel akmod-acpi_call akmod-tp_smapi"
@@ -39,12 +39,13 @@ $DNFINSTALL lame\* --exclude=lame-devel
 sudo dnf group -y upgrade --with-optional Multimedia
 
 echo "Installing Spotify"
-$DNFINSTALL lpf-spotify-client
-lpf update spotify-client
+flatpak remote-add --if-not-exists flathub 'https://flathub.org/repo/flathub.flatpakrepo'
+sudo flatpak install -y flathub com.spotify.Client
 
 echo "Enabling automatic notify updates"
 $DNFINSTALL dnf-automatic
 sudo systemctl enable --now dnf-automatic-notifyonly.timer
+echo "Edit /etc/dnf/automatic.conf if necessary"
 
 echo "Installing some utilities & libs"
 UTILS1="htop wget curl neofetch cryptopp neovim"
@@ -55,6 +56,7 @@ UTILS2="yubioath-desktop ykpers ykclient yubikey-manager libyubikey"
 $DNFINSTALL $UTILS2
 
 echo "Installing oh-my-zsh"
+echo "Hit yes on setting as default shell, then exit to continue script"
 sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 
 echo "Installing powerlevel10k w/instant prompt support"
@@ -65,13 +67,15 @@ wget -P /tmp "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS
 sudo mkdir "/usr/share/fonts/Meslo NF"
 sudo mv /tmp/*.ttf "/usr/share/fonts/Meslo NF"
 sudo /sbin/restorecon -v "/usr/share/fonts/Meslo NF/MesloLGS NF Bold Italic.ttf"
+sudo /sbin/restorecon -v "/usr/share/fonts/Meslo NF/MesloLGS NF Bold.ttf"
+sudo /sbin/restorecon -v "/usr/share/fonts/Meslo NF/MesloLGS NF Regular.ttf"
+sudo /sbin/restorecon -v "/usr/share/fonts/Meslo NF/MesloLGS NF Italic.ttf"
 sudo fc-cache -v
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 echo "//========================================================="
 echo "// Run "p10k configure" in zsh and enable instant prompt //"
 echo "// Set ZSH_THEME to powerlevel10k/powerlevel10k in zshrc"
 echo "//========================================================="
-
 	echo "Installing zsh-autosuggestions and zsh-syntax-highlighting"
 	ZSHTOOLS="zsh-autosuggestions zsh-syntax-highlighting"
 	$DNFINSTALL $ZSHTOOLS
@@ -80,7 +84,6 @@ echo "//========================================================="
 	echo "//========================================================="
 	echo "Add zsh-syntaxhighlighting and zsh-autosuggestions to zshrc plugins (and vscode :D)"
 	echo "//========================================================="
-
 echo "Installing GPG and importing public key"
 UTILS3="gnupg"
 PUBLICKEY="https://gist.githubusercontent.com/Trapacid/4cb8d34f1072fdc2708e5956bc19f890/raw/a2ef3811c5f5201f5e0b9e0e94f62ec28bf9fd31/public.gpg"
@@ -171,3 +174,18 @@ rm $PLATFORMTOOLSZIP
 echo "//====================================//"
 echo "Set PATH to include $HOME/platform-tools"
 echo "//====================================//"
+
+echo "//====================================//"
+echo "//====================================//"
+echo "//====================================//"
+echo "// POST INSTALL NOTES //"
+echo "//====================================//"
+
+echo 'Set PATH to include $HOME/platform-tools'
+echo 'Run "sudo snap install termius-app" to install termius'
+echo 'Edit /etc/dnf/automatic.conf if necessary'
+echo "Run "p10k configure" in zsh and enable instant prompt"
+echo "Set ZSH_THEME to powerlevel10k/powerlevel10k in zshrc"
+echo "Add zsh-syntax-highlighting and zsh-autosuggestions to zshrc plugins (and vscode :D)"
+echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
+echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
