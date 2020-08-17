@@ -12,7 +12,12 @@ echo "Updating first"
 sudo dnf update -y
 
 echo "Installing RPM Fusion free & non-free"
-$DNFINSTALL https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+RPMFREE="https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+RPMNONFREE="https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+$DNFINSTALL $RPMFREE $RPMNONFREE
+
+echo "Updating again"
+sudo dnf update -y
 
 echo "Installing groups aka bloat because big SSD"
 $DNFGROUPINSTALL "System Tools" "Sound and Video" "Security Lab" "Office/Productivity" "C Development Tools and Libraries" "Administration Tools" "Books and Guides" "Cloud Management Tools" "Development Tools" "Editors"
@@ -32,6 +37,13 @@ unzip heimdall.zip
 sudo mv $HEIMDALLBINARIES /usr/local/bin
 rm heimdall.zip
 
+echo "Installing Sublime Text"
+SUBLIMEKEY="https://download.sublimetext.com/sublimehq-rpm-pub.gpg"
+SUBLIMEREPO="https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo"
+sudo rpm -v --import $SUBLIMEKEY
+sudo dnf config-manager --add-repo $SUBLIMEREPO
+$DNFINSTALL sublime-text
+
 echo "Installing Termius using Snap (sadly termius pls make RPM)"
 $DNFINSTALL snapd
 sudo ln -s /var/lib/snapd/snap /snap
@@ -40,9 +52,10 @@ echo 'Run "sudo snap install termius-app" to install termius'
 echo "Installing TLP and necessary deps"
 DEPS1="kernel-devel akmod-acpi_call akmod-tp_smapi"
 TLP="tlp tlp-rdw"
+TLPKEY="RPM-GPG-KEY-tlp-fedora-32-primary"
 $DNFINSTALL https://repo.linrunner.de/fedora/tlp/repos/releases/tlp-release.fc$(rpm -E %fedora).noarch.rpm
 wget https://repo.linrunner.de/fedora/tlp/repos/RPM-GPG-KEY-tlp-fedora-32-primary
-sudo rpm --import RPM-GPG-KEY-tlp-fedora-32-primary 
+sudo rpm -v --import $TLPKEY
 rm RPM-GPG-KEY-tlp-fedora-32-primary
 $DNFINSTALL $DEPS1
 $DNFINSTALL $TLP
