@@ -4,6 +4,8 @@ i reinstall my distro about 500 times a year so this is to help me, plus learn b
 ## sources (not in any particular order)
 https://wiki.lineageos.org/devices/klte/install
 
+https://www.sublimetext.com/docs/3/linux_repositories.html#dnf
+
 https://bitwarden.com/download/
 
 https://ohmyz.sh/#install
@@ -17,6 +19,8 @@ https://snapcraft.io/install/termius-app/fedora
 https://github.com/ohmyzsh/ohmyzsh/issues/7688
 
 https://wiki.archlinux.org/index.php/Bash
+
+https://brave-browser.readthedocs.io/en/latest/installing-brave.html
 
 https://fedoraproject.org/wiki/HOWTO_Setup_Android_Development#Install_Android_SDK
 

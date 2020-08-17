@@ -70,6 +70,17 @@ echo "Installing Spotify"
 flatpak remote-add --if-not-exists flathub 'https://flathub.org/repo/flathub.flatpakrepo'
 sudo flatpak install -y flathub com.spotify.Client
 
+echo "Installing Brave"
+BRAVEASC="https://brave-browser-rpm-release.s3.brave.com/brave-core.asc"
+BRAVEREPO="https://brave-browser-rpm-release.s3.brave.com/x86_64/"
+sudo rpm -v --import $BRAVEASC
+sudo dnf config-manager --add-repo $BRAVEREPO
+$DNFINSTALL brave-browser
+
+echo "Installing WINE and winetricks"
+WINERPM="wine winetricks"
+$DNFINSTALL $WINERPM
+
 echo "Enabling automatic notify updates"
 $DNFINSTALL dnf-automatic
 sudo systemctl enable --now dnf-automatic-notifyonly.timer
