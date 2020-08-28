@@ -209,6 +209,12 @@ echo "Installing Java 1.8.0 (8) & JDK"
 JAVA="java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64"
 $DNFINSTALL $JAVA
 
+echo "Downloading VMWare Workstation Player"
+VMWARE="https://download3.vmware.com/software/player/file/VMware-Player-15.5.6-16341506.x86_64.bundle"
+wget -P $HOME/Downloads $VMWARE
+chmod 755 "$HOME/Downloads/VMware-Player-15.5.6-16341506.x86_64.bundle"
+cp /usr/src/kernels/`uname -r`/include/generated/uapi/linux/version.h /lib/modules/`uname -r`/build/include/linux/
+
 echo "Downloading Android SDK platform-tools"
 PLATFORMTOOLSURL="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
 PLATFORMTOOLSZIP="platform-tools-latest-linux.zip"
@@ -235,3 +241,4 @@ echo "Set ZSH_THEME to powerlevel10k/powerlevel10k in zshrc"
 echo "Add zsh-syntax-highlighting and zsh-autosuggestions to zshrc plugins (and vscode :D)"
 echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
 echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
+echo "setup VMWare Player for CTF rounds by running the bundle in a shell"
