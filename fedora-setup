@@ -209,11 +209,13 @@ echo "Installing Java 1.8.0 (8) & JDK"
 JAVA="java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64"
 $DNFINSTALL $JAVA
 
-echo "Downloading VMWare Workstation Player"
+echo "Downloading VMWare Workstation Player and Pro"
 VMWARE="https://download3.vmware.com/software/player/file/VMware-Player-15.5.6-16341506.x86_64.bundle"
+VMWAREPRO="https://download3.vmware.com/software/wkst/file/VMware-Workstation-Full-15.5.6-16341506.x86_64.bundle"
 wget -P $HOME/Downloads $VMWARE
-chmod 755 "$HOME/Downloads/VMware-Player-15.5.6-16341506.x86_64.bundle"
-cp /usr/src/kernels/`uname -r`/include/generated/uapi/linux/version.h /lib/modules/`uname -r`/build/include/linux/
+wget -P $HOME/Downloads $VMWAREPRO
+chmod 765 "$HOME/Downloads/VMware-Player-15.5.6-16341506.x86_64.bundle"
+chmod 765 "$HOME/Downloads/VMware-Workstation-Full-15.5.6-16341506.x86_64.bundle"
 
 echo "Downloading Android SDK platform-tools"
 PLATFORMTOOLSURL="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
