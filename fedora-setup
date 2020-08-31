@@ -22,6 +22,9 @@ sudo dnf update -y
 echo "Installing groups aka bloat because big SSD"
 $DNFGROUPINSTALL "System Tools" "Sound and Video" "Security Lab" "Office/Productivity" "C Development Tools and Libraries" "Administration Tools" "Books and Guides" "Cloud Management Tools" "Development Tools" "Editors"
 
+echo "Installing Cinnamon"
+$DNFINSTALL "@cinnamon-desktop"
+
 echo "Installing Bitwarden"
 BITWARDENURL="https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=rpm"
 BITWARDENRPM="Bitwarden-x86_64.rpm"
