@@ -90,7 +90,7 @@ sudo systemctl enable --now dnf-automatic-notifyonly.timer
 echo "Edit /etc/dnf/automatic.conf if necessary"
 
 echo "Installing some utilities & libs"
-UTILS1="htop wget curl neofetch cryptopp neovim"
+UTILS1="htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
 $DNFINSTALL $UTILS1
 
 echo "Installing yubikey software"
