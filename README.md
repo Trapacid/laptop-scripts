@@ -1,4 +1,4 @@
-# laptop-scrips
+# laptop-scripts
 i reinstall my distro about 500 times a year so this is to help me, plus learn bash.
 
 ## sources (not in any particular order)
