@@ -32,6 +32,15 @@ wget -O $BITWARDENRPM $BITWARDENURL
 $DNFINSTALL $BITWARDENRPM
 rm $BITWARDENRPM
 
+echo 'Checking for Broadcom wifi card'
+BROADCOMFIRMWARE="broadcom-wl broadcom-bt-firmware"
+if lspci | grep Broadcom > /dev/null; then
+	echo 'Broadcom wifi card found, installing broadcom packages'
+	$DNFINSTALL $BROADCOMFIRMWARE
+else
+	echo 'No broadcom chip found, horray!'
+fi
+
 echo "Installing heimdall from LineageOS"
 HEIMDALLURL="https://qc2.androidfilehost.com/dl/ZccawqhqJqj0Qpxt0ruMNg/1597467935/4349826312261708650/Heimdall-linux-master-012220.zip"
 HEIMDALLBINARIES="heimdall heimdall-frontend"
@@ -90,7 +99,7 @@ sudo systemctl enable --now dnf-automatic-notifyonly.timer
 echo "Edit /etc/dnf/automatic.conf if necessary"
 
 echo "Installing some utilities & libs"
-UTILS1="flashrom sharutils htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
+UTILS1="flashrom sharutils gnome-tweaks htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
 $DNFINSTALL $UTILS1
 
 echo "Installing yubikey software"
