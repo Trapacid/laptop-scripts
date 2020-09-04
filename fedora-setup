@@ -90,7 +90,7 @@ sudo systemctl enable --now dnf-automatic-notifyonly.timer
 echo "Edit /etc/dnf/automatic.conf if necessary"
 
 echo "Installing some utilities & libs"
-UTILS1="flashrom htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
+UTILS1="flashrom sharutils htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
 $DNFINSTALL $UTILS1
 
 echo "Installing yubikey software"
@@ -204,6 +204,9 @@ cd $OUTPUTFOLDER1
 rpm2cpio ./$CHROMERPM | cpio -idmv
 cd opt/google/chrome
 sudo mv WidevineCdm /usr/lib64/chromium-browser
+
+echo "Removing xfce4-terminal"
+$DNFREMOVE xfce4-terminal
 
 echo "Downloading RockboxUtility"
 cd $HOME/Downloads
