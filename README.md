@@ -39,3 +39,5 @@ https://docs.fedoraproject.org/en-US/quick-docs/securing-the-system-by-keeping-i
 https://docs.fedoraproject.org/en-US/quick-docs/installing-chromium-or-google-chrome-browsers/
 
 https://docs.fedoraproject.org/en-US/quick-docs/installing-spotify/
+
+https://doc.coreboot.org/tutorial/part1.html

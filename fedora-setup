@@ -208,6 +208,10 @@ sudo mv WidevineCdm /usr/lib64/chromium-browser
 echo "Removing xfce4-terminal"
 $DNFREMOVE xfce4-terminal
 
+echo "Installing coreboot dependencies"
+COREBOOTDEPS="git make gcc-gnat flex bison xz bzip2 gcc g++ ncurses-devel wget zlib-devel"
+$DNFINSTALL $COREBOOTDEPS
+
 echo "Downloading RockboxUtility"
 cd $HOME/Downloads
 wget $ROCKBOXUTILITY
