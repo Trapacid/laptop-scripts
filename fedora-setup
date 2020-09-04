@@ -156,7 +156,7 @@ echo "Setting git config"
 GITCONFIG="git config --global"
 SIGNINGKEY=2F5AA6FADF6C78CF
 $GITCONFIG user.name "Trapacid"
-$GITCONFIG user.email "ashley@weeb.tech"
+$GITCONFIG user.email "meowiee@archlinux.email"
 $GITCONFIG user.signingkey "$SIGNINGKEY"
 $GITCONFIG commit.gpgsign true
 $GITCONFIG color.ui true
