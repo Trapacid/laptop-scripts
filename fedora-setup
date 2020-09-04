@@ -180,7 +180,7 @@ ZSHRCURL="https://raw.githubusercontent.com/Trapacid/laptop-scripts/master/.zshr
 if [ ! -f .zshrc ]; then
 	wget -O $HOME/.zshrc $ZSHRCURL
 else
-	mv .zshrc $HOME/.zshrc
+	cp .zshrc $HOME/.zshrc
 fi
 echo "//============================//"
 echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
