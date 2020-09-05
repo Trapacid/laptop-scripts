@@ -196,10 +196,6 @@ echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to 
 echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
 echo "//============================//"
 
-echo 'Downgrading gawk pls fix heads osresearch'
-GAWK421="https://download-ib01.fedoraproject.org/pub/fedora/linux/releases/30/Everything/x86_64/os/Packages/g/gawk-4.2.1-6.fc30.x86_64.rpm"
-$DNFINSTALL $GAWK421
-
 echo "Installing firefox and chromium w/Widevine, purging Midori"
 BROWSERS="chromium firefox"
 DRMUTILS=libva-utils
@@ -222,6 +218,10 @@ COREBOOTDEPS="git make gcc-gnat libuuid-devel nasm texinfo flex bison xz bzip2 g
 HEADSDEPS="@development-tools gcc-c++ gcc-gnat zlib-devel perl-Digest-MD5 perl-Digest-SHA uuid-devel pcsc-tools ncurses-devel lbzip2 libuuid-devel lzma elfutils-libelf-devel bc bzip2 bison flex git gnupg iasl m4 nasm patch python wget libusb-devel cmake automake pv bsdiff autoconf libtool cpio texinfo"
 $DNFINSTALL $COREBOOTDEPS
 $DNFINSTALL $HEADSDEPS
+
+echo 'Downgrading gawk pls fix heads osresearch'
+GAWK421="https://download-ib01.fedoraproject.org/pub/fedora/linux/releases/30/Everything/x86_64/os/Packages/g/gawk-4.2.1-6.fc30.x86_64.rpm"
+$DNFINSTALL $GAWK421
 
 echo "Downloading RockboxUtility"
 cd $HOME/Downloads
