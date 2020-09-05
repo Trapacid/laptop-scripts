@@ -197,7 +197,7 @@ echo '!! If you get agent refused operation errors, run this command: gpg-connec
 echo "//============================//"
 
 echo 'Downgrading gawk pls fix heads osresearch'
-GAWK421="https://download-ib01.fedoraproject.org/pub/fedora/linux/releases/30/Everything/aarch64/os/Packages/g/gawk-4.2.1-6.fc30.aarch64.rpm"
+GAWK421="https://download-ib01.fedoraproject.org/pub/fedora/linux/releases/30/Everything/x86_64/os/Packages/g/gawk-4.2.1-6.fc30.x86_64.rpm"
 $DNFINSTALL $GAWK421
 
 echo "Installing firefox and chromium w/Widevine, purging Midori"
