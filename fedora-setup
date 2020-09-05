@@ -33,7 +33,7 @@ $DNFINSTALL $BITWARDENRPM
 rm $BITWARDENRPM
 
 echo 'Checking for Broadcom wifi card'
-BROADCOMFIRMWARE="broadcom-wl broadcom-bt-firmware"
+BROADCOMFIRMWARE="broadcom-bt-firmware"
 if lspci | grep Broadcom > /dev/null; then
 	echo 'Broadcom wifi card found, installing broadcom packages'
 	$DNFINSTALL $BROADCOMFIRMWARE
