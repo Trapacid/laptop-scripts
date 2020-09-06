@@ -8,7 +8,11 @@ ROCKBOXUTILITY="http://download.rockbox.org/rbutil/linux/RockboxUtility-v1.4.1-6
 ROCKBOXFOLDER="RockboxUtility-v1.4.1-64bit"
 ROCKBOXTAR="RockboxUtility-v1.4.1-64bit.tar.bz2"
 
-echo "Updating first"
+echo "Enabling Testing Repos"
+dnf config-manager --set-enabled updates-testing
+dnf config-manager --set-enabled updates-testing-modular
+
+echo "Updating"
 sudo dnf update -y
 
 echo "Installing RPM Fusion free & non-free"
