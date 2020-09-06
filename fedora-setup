@@ -22,8 +22,8 @@ sudo dnf update -y
 echo "Installing groups aka bloat because big SSD"
 $DNFGROUPINSTALL "System Tools" "Sound and Video" "Security Lab" "Office/Productivity" "C Development Tools and Libraries" "Administration Tools" "Books and Guides" "Cloud Management Tools" "Development Tools" "Editors"
 
-echo "Installing Cinnamon"
-$DNFINSTALL "@cinnamon-desktop"
+#echo "Installing Cinnamon"
+#$DNFINSTALL "@cinnamon-desktop"
 
 echo "Installing Bitwarden"
 BITWARDENURL="https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=rpm"
@@ -98,8 +98,8 @@ $DNFINSTALL dnf-automatic
 sudo systemctl enable --now dnf-automatic-notifyonly.timer
 echo "Edit /etc/dnf/automatic.conf if necessary"
 
-echo "Installing some utilities & libs"
-UTILS1="flashrom sharutils gnome-tweaks htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
+echo "Installing some utilities, libs, and apps"
+UTILS1="flashrom sharutils tilix gnome-tweaks mcstrans libselinux-utils setools setools-gui setools-console selinux-policy-targeted selinux-policy policycoreutils htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
 $DNFINSTALL $UTILS1
 
 echo "Installing yubikey software"
@@ -250,6 +250,10 @@ wget $PLATFORMTOOLSURL
 unzip $PLATFORMTOOLSZIP
 mv platform-tools $HOME
 rm $PLATFORMTOOLSZIP
+
+echo "Removing GNOME Terminal"
+$DNFREMOVE gnome-terminal
+
 echo "//====================================//"
 echo "Set PATH to include $HOME/platform-tools"
 echo "//====================================//"
