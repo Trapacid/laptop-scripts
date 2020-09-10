@@ -251,6 +251,13 @@ wget -P $HOME/Downloads $VMWAREPRO
 chmod 765 "$HOME/Downloads/VMware-Player-15.5.6-16341506.x86_64.bundle"
 chmod 765 "$HOME/Downloads/VMware-Workstation-Full-15.5.6-16341506.x86_64.bundle"
 
+echo "Adding VirtualBox repo and downloading Extension pack"
+VBOXREPO="https://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo"
+VBOXEXTPACK="https://download.virtualbox.org/virtualbox/6.1.14/Oracle_VM_VirtualBox_Extension_Pack-6.1.14.vbox-extpack"
+$DNFINSTALL $VBOXREPO
+sudo dnf update
+wget -P $HOME/Downloads $VBOXEXTPACK
+
 echo "Downloading Android SDK platform-tools"
 PLATFORMTOOLSURL="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
 PLATFORMTOOLSZIP="platform-tools-latest-linux.zip"
@@ -286,5 +293,6 @@ echo "Add zsh-syntax-highlighting and zsh-autosuggestions to zshrc plugins (and 
 echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
 echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
 echo "setup VMWare Player for CTF rounds by running the bundle in a shell"
+echo 'install yucky VirtualBox NOT using the keyword, but by the version e.g. VirtualBox-2.3 see dnf list VirtualBox'
 #echo 'BE SURE TO sudo visudo AND SET %wheel AS ROLE=sysadm_r'
 #echo 'BE SURE TO RELABEL SYSTEM WITH restorecon -vRF /'
