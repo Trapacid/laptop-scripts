@@ -148,10 +148,15 @@ echo "Installing GPG and importing public key"
 UTILS3="gnupg"
 PUBLICKEY="https://p.catgirlsare.sexy/raw/upofodalem"
 MASTERKEY="0xD18CD4CDAFD89755"
+SSHKEYID="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJIeu9xNrSiGcnvk+AkdAU+Id5nHOgUDvrrYttiPwgA9 cardno:000611335101"
+SSHCONFIG="https://p.catgirlsare.sexy/raw/mowuxipumo"
 
 $DNFINSTALL $UTILS3
 wget $PUBLICKEY
 gpg --import upofodalem
+echo $SSHKEYID > $HOME/.ssh/id_ed25519_yubikey.pub
+chmod 0644 $HOME/.ssh/id_ed25519_yubikey.pub
+wget $SSHCONFIG && mv mowuxipumo $HOME/.ssh/config
 echo "//=====================================//"
 echo "//=====================================//"
 echo "// trust; 5; y; quit to ultimatley trust for yubikey GPG to work //"
@@ -193,9 +198,8 @@ wget -O $HOME/.gnupg/gpg.conf https://raw.githubusercontent.com/drduh/config/mas
 chmod 600 $HOME/.gnupg/gpg.conf
 echo "Importing .zshrc"
 
-ZSHRCURL="https://raw.githubusercontent.com/Trapacid/laptop-scripts/master/.zshrc"
-
 if [ ! -f .zshrc ]; then
+	ZSHRCURL="https://p.catgirlsare.sexy/raw/pafusoluge"
 	wget -O $HOME/.zshrc $ZSHRCURL
 else
 	cp .zshrc $HOME/.zshrc
