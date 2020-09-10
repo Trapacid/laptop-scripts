@@ -12,6 +12,10 @@ echo "Enabling Testing Repos"
 dnf config-manager --set-enabled updates-testing
 dnf config-manager --set-enabled updates-testing-modular
 
+echo "Installing OneRNG"
+ONERNGRPM="https://github.com/OneRNG/onerng.github.io/raw/master/sw/onerng-3.6-1.fc20.noarch.rpm"
+$DNFINSTALL $ONERNGRPM
+
 echo "Updating"
 sudo dnf update -y
 
@@ -103,7 +107,7 @@ sudo systemctl enable --now dnf-automatic-notifyonly.timer
 echo "Edit /etc/dnf/automatic.conf if necessary"
 
 echo "Installing some utilities, libs, and apps"
-UTILS1="flashrom sharutils tilix gnome-tweaks mcstrans libselinux-utils setools setools-gui setools-console selinux-policy-targeted selinux-policy policycoreutils htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
+UTILS1="flashrom opensc pkcs11-dump pkcs11-helper tpm-tools-pkcs11 openssl-pkcs11 sharutils tilix gnome-tweaks mcstrans libselinux-utils setools setools-gui setools-console selinux-policy-targeted selinux-policy policycoreutils htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
 $DNFINSTALL $UTILS1
 $DNFINSTALL '@gnome-desktop'
 
@@ -142,24 +146,24 @@ echo "//========================================================="
 	echo "//========================================================="
 echo "Installing GPG and importing public key"
 UTILS3="gnupg"
-PUBLICKEY="https://gist.githubusercontent.com/Trapacid/4cb8d34f1072fdc2708e5956bc19f890/raw/a2ef3811c5f5201f5e0b9e0e94f62ec28bf9fd31/public.gpg"
-MASTERKEY="0xEFEC3E75AAFD7BC7"
+PUBLICKEY="https://p.catgirlsare.sexy/raw/upofodalem"
+MASTERKEY="0xD18CD4CDAFD89755"
 
 $DNFINSTALL $UTILS3
 wget $PUBLICKEY
-gpg --import public.gpg
+gpg --import upofodalem
 echo "//=====================================//"
 echo "//=====================================//"
 echo "// trust; 5; y; quit to ultimatley trust for yubikey GPG to work //"
 echo "//=====================================//"
 echo "//=====================================//"
 gpg --edit-key $MASTERKEY
-mv public.gpg $HOME/Documents
-echo "public.gpg is in $HOME/Documents"
+mv upofodalem $HOME/Documents/$MASTERKEY.txt
+echo "$MASTERKEY.txt is in $HOME/Documents"
 
 echo "Setting git config"
 GITCONFIG="git config --global"
-SIGNINGKEY=2F5AA6FADF6C78CF
+SIGNINGKEY=0x1B548AA25081013F
 $GITCONFIG user.name "Trapacid"
 $GITCONFIG user.email "meowiee@archlinux.email"
 $GITCONFIG user.signingkey "$SIGNINGKEY"
