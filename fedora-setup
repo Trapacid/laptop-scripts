@@ -69,6 +69,17 @@ $DNFINSTALL snapd
 sudo ln -s /var/lib/snapd/snap /snap
 echo 'Run "sudo snap install termius-app" to install termius'
 
+echo "Installing yubikey-touch-detector"
+sudo mkdir /etc/yubikey-touch-detector
+sudo wget -O /etc/yubikey-touch-detector/service.conf https://p.catgirlsare.sexy/raw/lipexiwapu
+sudo wget -O /usr/lib/systemd/system/yubikey-touch-detector.service https://p.catgirlsare.sexy/raw/elokoperos
+sudo wget -O /usr/bin/yubikey-touch-detector https://alastor.u.catgirlsare.sexy/5PA0P3qW
+sudo restorecon -vRF /etc/yubikey-touch-detector
+sudo restorecon -vRF /usr/bin/yubikey-touch-detector
+sudo restorecon -vRF /usr/lib/systemd/system/yubikey-touch-detector.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now yubikey-touch-detector.service
+
 echo "Installing TLP and necessary deps"
 DEPS1="kernel-devel akmod-acpi_call akmod-tp_smapi"
 TLP="tlp tlp-rdw"
@@ -107,7 +118,7 @@ sudo systemctl enable --now dnf-automatic-notifyonly.timer
 echo "Edit /etc/dnf/automatic.conf if necessary"
 
 echo "Installing some utilities, libs, and apps"
-UTILS1="flashrom rng-tools opensc pkcs11-dump pkcs11-helper tpm-tools-pkcs11 openssl-pkcs11 sharutils tilix gnome-tweaks mcstrans libselinux-utils setools setools-gui setools-console selinux-policy-targeted selinux-policy policycoreutils htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
+UTILS1="flashrom rng-tools opensc golang-bin libnotify libnotify-devel libnotifymm libnotifymm-devel pkcs11-dump pkcs11-helper tpm-tools-pkcs11 openssl-pkcs11 sharutils tilix gnome-tweaks mcstrans libselinux-utils setools setools-gui setools-console selinux-policy-targeted selinux-policy policycoreutils htop wget curl neofetch cryptopp neovim util-linux util-linux-user"
 $DNFINSTALL $UTILS1
 $DNFINSTALL '@gnome-desktop'
 
@@ -152,18 +163,19 @@ SSHKEYID="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJIeu9xNrSiGcnvk+AkdAU+Id5nHOgUDvr
 SSHCONFIG="https://p.catgirlsare.sexy/raw/mowuxipumo"
 
 $DNFINSTALL $UTILS3
-wget $PUBLICKEY
-gpg --import upofodalem
+wget -O $MASTERKEY.txt $PUBLICKEY
+gpg --import $MASTERKEY.txt
 echo $SSHKEYID > $HOME/.ssh/id_ed25519_yubikey.pub
 chmod 0644 $HOME/.ssh/id_ed25519_yubikey.pub
-wget $SSHCONFIG && mv mowuxipumo $HOME/.ssh/config
+restorecon -vF $HOME/.ssh/id_ed25519_yubikey.pub
+wget -O $HOME/.ssh/config $SSHCONFIG
 echo "//=====================================//"
 echo "//=====================================//"
 echo "// trust; 5; y; quit to ultimatley trust for yubikey GPG to work //"
 echo "//=====================================//"
 echo "//=====================================//"
 gpg --edit-key $MASTERKEY
-mv upofodalem $HOME/Documents/$MASTERKEY.txt
+mv $MASTERKEY.txt $HOME/Documents/$MASTERKEY.txt
 echo "$MASTERKEY.txt is in $HOME/Documents"
 
 echo "Setting git config"
