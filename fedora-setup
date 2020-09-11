@@ -72,7 +72,7 @@ echo 'Run "sudo snap install termius-app" to install termius'
 echo "Installing yubikey-touch-detector"
 sudo mkdir /etc/yubikey-touch-detector
 sudo wget -O /etc/yubikey-touch-detector/service.conf https://p.catgirlsare.sexy/raw/lipexiwapu
-sudo wget -O /usr/lib/systemd/system/yubikey-touch-detector.service https://p.catgirlsare.sexy/raw/elokoperos
+sudo wget -O /usr/lib/systemd/system/yubikey-touch-detector.service https://p.catgirlsare.sexy/raw/awipokulaw
 sudo wget -O /usr/bin/yubikey-touch-detector https://alastor.u.catgirlsare.sexy/5PA0P3qW
 sudo restorecon -vRF /etc/yubikey-touch-detector
 sudo restorecon -vRF /usr/bin/yubikey-touch-detector
