@@ -254,6 +254,10 @@ HEADSDEPS="@development-tools gcc-c++ gcc-gnat zlib-devel perl-Digest-MD5 perl-D
 $DNFINSTALL $COREBOOTDEPS
 $DNFINSTALL $HEADSDEPS
 
+echo "Installing neomutt"
+sudo dnf copr enable flatcap/neomutt
+$DNFINSTALL neomutt
+
 echo 'Downgrading gawk pls fix heads osresearch'
 GAWK421="https://download-ib01.fedoraproject.org/pub/fedora/linux/releases/30/Everything/x86_64/os/Packages/g/gawk-4.2.1-6.fc30.x86_64.rpm"
 $DNFINSTALL $GAWK421
