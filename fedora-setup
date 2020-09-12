@@ -124,6 +124,10 @@ $DNFINSTALL '@gnome-desktop'
 pip install --upgrade --force-reinstall neovim --user
 pip install --upgrade --force-reinstall discord --user
 
+echo "Installing neovim rc file"
+mkdir -p $HOME/.config/nvim
+cp init.vim $HOME/.config/nvim
+
 echo "Installing yubikey software"
 UTILS2="yubioath-desktop ykpers ykclient yubikey-manager libyubikey"
 $DNFINSTALL $UTILS2
