@@ -101,13 +101,6 @@ echo "Installing Spotify"
 flatpak remote-add --if-not-exists flathub 'https://flathub.org/repo/flathub.flatpakrepo'
 sudo flatpak install -y flathub com.spotify.Client
 
-echo "Installing Brave"
-BRAVEASC="https://brave-browser-rpm-release.s3.brave.com/brave-core.asc"
-BRAVEREPO="https://brave-browser-rpm-release.s3.brave.com/x86_64/"
-sudo rpm -v --import $BRAVEASC
-sudo dnf config-manager --add-repo $BRAVEREPO
-$DNFINSTALL brave-browser
-
 echo "Installing WINE and winetricks"
 WINERPM="wine winetricks"
 $DNFINSTALL $WINERPM
@@ -159,7 +152,7 @@ echo "//========================================================="
 	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 	echo "//========================================================="
-	echo "Add zsh-syntaxhighlighting and zsh-autosuggestions to zshrc plugins (and vscode :D)"
+	echo "Add zsh-syntaxhighlighting zsh-autosuggestions and git to zshrc plugins (and vscode :D)"
 	echo "//========================================================="
 echo "Installing GPG and importing public key"
 UTILS3="gnupg"
@@ -227,19 +220,14 @@ echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to 
 echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
 echo "//============================//"
 
-echo "Installing firefox and chromium w/Widevine, purging Midori"
-BROWSERS="chromium firefox"
+echo "purging Midori and Firefox (security), installing Google Chrome Beta"
+BROWSERS="google-chrome-beta"
 DRMUTILS=libva-utils
-OUTPUTFOLDER1=/tmp/google-chrome-rpm
 
-$DNFREMOVE midori
+$DNFREMOVE midori firefox
 $DNFINSTALL $BROWSERS $DRMUTILS
-mkdir $OUTPUTFOLDER1
-wget -P $OUTPUTFOLDER1 https://dl.google.com/linux/direct/$CHROMERPM
-cd $OUTPUTFOLDER1
-rpm2cpio ./$CHROMERPM | cpio -idmv
-cd opt/google/chrome
-sudo mv WidevineCdm /usr/lib64/chromium-browser
+$DNFINSTALL https://dl.google.com/linux/direct/$CHROMERPM
+$DNFINSTALL $BROWSERS $DRMUTILS
 
 echo "Removing xfce4-terminal"
 $DNFREMOVE xfce4-terminal
@@ -253,10 +241,6 @@ COREBOOTDEPS="git make gcc-gnat libuuid-devel nasm texinfo flex bison xz bzip2 g
 HEADSDEPS="@development-tools gcc-c++ gcc-gnat zlib-devel perl-Digest-MD5 perl-Digest-SHA uuid-devel pcsc-tools ncurses-devel lbzip2 libuuid-devel lzma elfutils-libelf-devel bc bzip2 bison flex git gnupg iasl m4 nasm patch python wget libusb-devel cmake automake pv bsdiff autoconf libtool cpio texinfo"
 $DNFINSTALL $COREBOOTDEPS
 $DNFINSTALL $HEADSDEPS
-
-echo "Installing neomutt"
-sudo dnf copr enable flatcap/neomutt
-$DNFINSTALL neomutt
 
 echo 'Downgrading gawk pls fix heads osresearch'
 GAWK421="https://download-ib01.fedoraproject.org/pub/fedora/linux/releases/30/Everything/x86_64/os/Packages/g/gawk-4.2.1-6.fc30.x86_64.rpm"
@@ -274,19 +258,19 @@ JAVA="java-1.8.0-openjdk.x86_64 java-1.8.0-openjdk-devel.x86_64"
 $DNFINSTALL $JAVA
 
 echo "Downloading VMWare Workstation Player and Pro"
-VMWARE="https://download3.vmware.com/software/player/file/VMware-Player-15.5.6-16341506.x86_64.bundle"
-VMWAREPRO="https://download3.vmware.com/software/wkst/file/VMware-Workstation-Full-15.5.6-16341506.x86_64.bundle"
+VMWARE="https://download3.vmware.com/software/player/file/VMware-Player-16.0.0-16894299.x86_64.bundle"
+VMWAREPRO="https://download3.vmware.com/software/wkst/file/VMware-Workstation-Full-16.0.0-16894299.x86_64.bundle"
 wget -P $HOME/Downloads $VMWARE
 wget -P $HOME/Downloads $VMWAREPRO
-chmod 765 "$HOME/Downloads/VMware-Player-15.5.6-16341506.x86_64.bundle"
-chmod 765 "$HOME/Downloads/VMware-Workstation-Full-15.5.6-16341506.x86_64.bundle"
+chmod 765 "$HOME/Downloads/VMware-Player-16.0.0-16894299.x86_64.bundle"
+chmod 765 "$HOME/Downloads/VMware-Workstation-Full-16.0.0-16894299.x86_64.bundle"
 
-echo "Adding VirtualBox repo and downloading Extension pack"
-VBOXREPO="https://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo"
-VBOXEXTPACK="https://download.virtualbox.org/virtualbox/6.1.14/Oracle_VM_VirtualBox_Extension_Pack-6.1.14.vbox-extpack"
-$DNFINSTALL $VBOXREPO
-sudo dnf update
-wget -P $HOME/Downloads $VBOXEXTPACK
+#echo "Adding VirtualBox repo and downloading Extension pack"
+#VBOXREPO="https://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo"
+#VBOXEXTPACK="https://download.virtualbox.org/virtualbox/6.1.14/Oracle_VM_VirtualBox_Extension_Pack-6.1.14.vbox-extpack"
+#$DNFINSTALL $VBOXREPO
+#sudo dnf update
+#wget -P $HOME/Downloads $VBOXEXTPACK
 
 echo "Downloading Android SDK platform-tools"
 PLATFORMTOOLSURL="https://dl.google.com/android/repository/platform-tools-latest-linux.zip"
@@ -297,12 +281,73 @@ unzip $PLATFORMTOOLSZIP
 mv platform-tools $HOME
 rm $PLATFORMTOOLSZIP
 
+echo "Sysctl tweaks"
+sudo echo 'kernel.printk = 3 3 3 3' > /etc/sysctl.d/30_silent-kernel-printk.conf
+sudo echo 'kernel.yama.ptrace_scope=3
+
+net.core.bpf_jit_harden=2
+
+kernel.unprivileged_bpf_disabled=1
+
+user.max_user_namespaces=0
+
+vm.swappiness=1
+vm.unprivileged_userfaultfd=0
+
+fs.suid_dumpable=0
+
+vm.mmap_rnd_bits=32
+vm.mmap_rnd_compat_bits=16
+
+net.ipv4.tcp_timestamps=0
+net.ipv4.tcp_rfc1337=1
+
+fs.protected_fifos=2
+fs.protected_regular=2
+fs.protected_hardlinks=1
+fs.protected_symlinks=1
+
+kernel.core_pattern=|/bin/false
+
+kernel.kexec_load_disabled=1
+kernel.perf_event_paranoid=3
+
+kernel.dmesg_restrict=1
+kernel.kptr_restrict=2
+
+net.ipv4.ip_forward=0
+net.ipv4.conf.all.send_redirects=0
+net.ipv4.conf.default.send_redirects=0
+net.ipv4.tcp_max_syn_backlog=1280
+net.ipv4.icmp_echo_ignore_broadcasts=1
+net.ipv4.conf.all.accept_source_route=0
+net.ipv4.conf.all.accept_redirects=0
+net.ipv4.conf.all.secure_redirects=0
+net.ipv4.conf.all.log_martians=1
+net.ipv4.conf.default.accept_source_route=0
+net.ipv4.conf.default.accept_redirects=0
+net.ipv4.conf.default.secure_redirects=0
+net.ipv4.icmp_echo_ignore_broadcasts=1
+net.ipv4.icmp_ignore_bogus_error_responses=1
+net.ipv4.tcp_syncookies=1
+net.ipv4.conf.default.log_martians=1
+net.ipv4.conf.all.rp_filter=1
+net.ipv4.conf.default.rp_filter=1
+net.ipv4.tcp_timestamps=0
+net.ipv6.conf.default.accept_source_route=0
+net.ipv6.conf.all.accept_ra=0
+net.ipv6.conf.all.accept_source_route=0
+net.ipv6.conf.default.accept_ra=0
+net.ipv6.conf.all.accept_redirects=0
+net.ipv6.conf.default.accept_redirects=0' > /etc/sysctl.d/99-sysctl.conf
+
+
 echo "Removing GNOME Terminal (doesn't even with with my SELinux setup, tilix does)"
 $DNFREMOVE gnome-terminal
 
-echo "Setting $USER as staff_u"
-sudo semanage login -a -s staff_u $USER
-echo 'BE SURE TO sudo visudo AND SET %wheel AS ROLE=sysadm_r'
+#echo "Setting $USER as staff_u"
+#sudo semanage login -a -s staff_u $USER
+#echo 'BE SURE TO sudo visudo AND SET %wheel AS ROLE=sysadm_r'
 
 echo "//====================================//"
 echo "Set PATH to include $HOME/platform-tools"
@@ -323,6 +368,6 @@ echo "Add zsh-syntax-highlighting and zsh-autosuggestions to zshrc plugins (and 
 echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
 echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
 echo "setup VMWare Player for CTF rounds by running the bundle in a shell"
-echo 'install yucky VirtualBox NOT using the keyword, but by the version e.g. VirtualBox-2.3 see dnf list VirtualBox'
+#echo 'install yucky VirtualBox NOT using the keyword, but by the version e.g. VirtualBox-2.3 see dnf list VirtualBox'
 #echo 'BE SURE TO sudo visudo AND SET %wheel AS ROLE=sysadm_r'
 #echo 'BE SURE TO RELABEL SYSTEM WITH restorecon -vRF /'
