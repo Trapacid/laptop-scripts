@@ -229,6 +229,11 @@ $DNFINSTALL $BROWSERS $DRMUTILS
 $DNFINSTALL https://dl.google.com/linux/direct/$CHROMERPM
 $DNFINSTALL $BROWSERS $DRMUTILS
 
+echo "Compiling chrome SELinux sandbox"
+checkmodule -M -m -o chrome.mod chrome.te
+semodule_package -o chrome.pp -m chrome.mod
+echo 'Run sudo semodule -i chrome.pp to load this'
+
 echo "Removing xfce4-terminal"
 $DNFREMOVE xfce4-terminal
 
@@ -368,6 +373,7 @@ echo "Add zsh-syntax-highlighting and zsh-autosuggestions to zshrc plugins (and 
 echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
 echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
 echo "setup VMWare Player for CTF rounds by running the bundle in a shell"
+echo 'Run sudo semodule -i chrome.pp to load Chrome Sandbox SELinux policy'
 #echo 'install yucky VirtualBox NOT using the keyword, but by the version e.g. VirtualBox-2.3 see dnf list VirtualBox'
 #echo 'BE SURE TO sudo visudo AND SET %wheel AS ROLE=sysadm_r'
 #echo 'BE SURE TO RELABEL SYSTEM WITH restorecon -vRF /'
