@@ -180,7 +180,7 @@ echo "$MASTERKEY.txt is in $HOME/Documents"
 echo "Setting git config"
 GITCONFIG="git config --global"
 SIGNINGKEY=0xA6FB40347E5344AC
-$GITCONFIG user.name "Trapacid"
+$GITCONFIG user.name "Ashley"
 $GITCONFIG user.email "meowiee@archlinux.email"
 $GITCONFIG user.signingkey "$SIGNINGKEY"
 $GITCONFIG commit.gpgsign true
