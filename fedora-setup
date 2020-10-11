@@ -156,10 +156,10 @@ echo "//========================================================="
 	echo "//========================================================="
 echo "Installing GPG and importing public key"
 UTILS3="gnupg"
-PUBLICKEY="https://p.catgirlsare.sexy/raw/upofodalem"
-MASTERKEY="0xD18CD4CDAFD89755"
-SSHKEYID="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJIeu9xNrSiGcnvk+AkdAU+Id5nHOgUDvrrYttiPwgA9 cardno:000611335101"
-SSHCONFIG="https://p.catgirlsare.sexy/raw/mowuxipumo"
+PUBLICKEY="https://haste.cypherbot.org/raw/wuruwopefu"
+MASTERKEY="0x9507D5DCD1997DE9"
+SSHKEYID="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEifx7YeDpkWMNnnQzJ3kSNj8yBBrn7kkOi++Ge2bvE4 cardno:000611335101"
+SSHCONFIG="https://haste.cypherbot.org/raw/alapayelaf"
 
 $DNFINSTALL $UTILS3
 wget -O $MASTERKEY.txt $PUBLICKEY
@@ -179,7 +179,7 @@ echo "$MASTERKEY.txt is in $HOME/Documents"
 
 echo "Setting git config"
 GITCONFIG="git config --global"
-SIGNINGKEY=0x1B548AA25081013F
+SIGNINGKEY=0xA6FB40347E5344AC
 $GITCONFIG user.name "Trapacid"
 $GITCONFIG user.email "meowiee@archlinux.email"
 $GITCONFIG user.signingkey "$SIGNINGKEY"
