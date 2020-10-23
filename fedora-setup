@@ -69,16 +69,16 @@ $DNFINSTALL snapd
 sudo ln -s /var/lib/snapd/snap /snap
 echo 'Run "sudo snap install termius-app" to install termius'
 
-echo "Installing yubikey-touch-detector"
-sudo mkdir /etc/yubikey-touch-detector
-sudo wget -O /etc/yubikey-touch-detector/service.conf https://p.catgirlsare.sexy/raw/lipexiwapu
-sudo wget -O /usr/lib/systemd/system/yubikey-touch-detector.service https://p.catgirlsare.sexy/raw/awipokulaw
-sudo wget -O /usr/bin/yubikey-touch-detector https://alastor.u.catgirlsare.sexy/5PA0P3qW.
-sudo restorecon -vRF /etc/yubikey-touch-detector
-sudo restorecon -vRF /usr/bin/yubikey-touch-detector
-sudo restorecon -vRF /usr/lib/systemd/system/yubikey-touch-detector.service
-sudo systemctl daemon-reload
-sudo systemctl enable --now yubikey-touch-detector.service
+#echo "Installing yubikey-touch-detector"
+#sudo mkdir /etc/yubikey-touch-detector
+#sudo wget -O /etc/yubikey-touch-detector/service.conf https://p.catgirlsare.sexy/raw/lipexiwapu
+#sudo wget -O /usr/lib/systemd/system/yubikey-touch-detector.service https://p.catgirlsare.sexy/raw/awipokulaw
+#sudo wget -O /usr/bin/yubikey-touch-detector https://alastor.u.catgirlsare.sexy/5PA0P3qW.
+#sudo restorecon -vRF /etc/yubikey-touch-detector
+#sudo restorecon -vRF /usr/bin/yubikey-touch-detector
+#sudo restorecon -vRF /usr/lib/systemd/system/yubikey-touch-detector.service
+#sudo systemctl daemon-reload
+#sudo systemctl enable --now yubikey-touch-detector.service
 
 echo "Installing TLP and necessary deps"
 DEPS1="kernel-devel akmod-acpi_call akmod-tp_smapi"
@@ -210,7 +210,7 @@ chmod 600 $HOME/.gnupg/gpg.conf
 echo "Importing .zshrc"
 
 if [ ! -f .zshrc ]; then
-	ZSHRCURL="https://p.catgirlsare.sexy/raw/pafusoluge"
+	ZSHRCURL="https://pastebin.com/raw/k9zebfST"
 	wget -O $HOME/.zshrc $ZSHRCURL
 else
 	cp .zshrc $HOME/.zshrc
