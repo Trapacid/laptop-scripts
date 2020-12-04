@@ -229,10 +229,8 @@ $DNFINSTALL $BROWSERS $DRMUTILS
 $DNFINSTALL https://dl.google.com/linux/direct/$CHROMERPM
 $DNFINSTALL $BROWSERS $DRMUTILS
 
-echo "Compiling chrome SELinux sandbox"
-checkmodule -M -m -o chrome.mod chrome.te
-semodule_package -o chrome.pp -m chrome.mod
-echo 'Run sudo semodule -i chrome.pp to load this'
+echo "SELinux and Chromium SUID sandboxing"
+setsebool -P unconfined_chrome_sandbox_transition 0
 
 echo "Removing xfce4-terminal"
 $DNFREMOVE xfce4-terminal
