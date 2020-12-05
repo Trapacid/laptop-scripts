@@ -4,17 +4,9 @@ CHROMERPM=google-chrome-stable_current_x86_64.rpm
 DNFINSTALL="sudo dnf install -y"
 DNFGROUPINSTALL="sudo dnf groupinstall -y"
 DNFREMOVE="sudo dnf remove -y"
-ROCKBOXUTILITY="http://download.rockbox.org/rbutil/linux/RockboxUtility-v1.4.1-64bit.tar.bz2"
-ROCKBOXFOLDER="RockboxUtility-v1.4.1-64bit"
-ROCKBOXTAR="RockboxUtility-v1.4.1-64bit.tar.bz2"
-
-echo "Enabling Testing Repos"
-dnf config-manager --set-enabled updates-testing
-dnf config-manager --set-enabled updates-testing-modular
-
-echo "Installing OneRNG"
-ONERNGRPM="https://github.com/OneRNG/onerng.github.io/raw/master/sw/onerng-3.6-1.fc20.noarch.rpm"
-$DNFINSTALL $ONERNGRPM
+#ROCKBOXUTILITY="http://download.rockbox.org/rbutil/linux/RockboxUtility-v1.4.1-64bit.tar.bz2"
+#ROCKBOXFOLDER="RockboxUtility-v1.4.1-64bit"
+#ROCKBOXTAR="RockboxUtility-v1.4.1-64bit.tar.bz2"
 
 echo "Updating"
 sudo dnf update -y
@@ -27,19 +19,6 @@ $DNFINSTALL $RPMFREE $RPMNONFREE
 echo "Updating again"
 sudo dnf update -y
 
-echo "Installing groups aka bloat because big SSD"
-$DNFGROUPINSTALL "System Tools" "Sound and Video" "Security Lab" "Office/Productivity" "C Development Tools and Libraries" "Administration Tools" "Books and Guides" "Cloud Management Tools" "Development Tools" "Editors"
-
-#echo "Installing Cinnamon"
-#$DNFINSTALL "@cinnamon-desktop"
-
-echo "Installing Bitwarden"
-BITWARDENURL="https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=rpm"
-BITWARDENRPM="Bitwarden-x86_64.rpm"
-wget -O $BITWARDENRPM $BITWARDENURL
-$DNFINSTALL $BITWARDENRPM
-rm $BITWARDENRPM
-
 echo 'Checking for Broadcom wifi card'
 BROADCOMFIRMWARE="broadcom-bt-firmware"
 if lspci | grep Broadcom > /dev/null; then
@@ -49,49 +28,6 @@ else
 	echo 'No broadcom chip found, horray!'
 fi
 
-echo "Installing heimdall from LineageOS"
-HEIMDALLURL="https://qc2.androidfilehost.com/dl/ZccawqhqJqj0Qpxt0ruMNg/1597467935/4349826312261708650/Heimdall-linux-master-012220.zip"
-HEIMDALLBINARIES="heimdall heimdall-frontend"
-wget -O heimdall.zip $HEIMDALLURL
-unzip heimdall.zip
-sudo mv $HEIMDALLBINARIES /usr/local/bin
-rm heimdall.zip
-
-echo "Installing Sublime Text"
-SUBLIMEKEY="https://download.sublimetext.com/sublimehq-rpm-pub.gpg"
-SUBLIMEREPO="https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo"
-sudo rpm -v --import $SUBLIMEKEY
-sudo dnf config-manager --add-repo $SUBLIMEREPO
-$DNFINSTALL sublime-text
-
-echo "Installing Termius using Snap (sadly termius pls make RPM)"
-$DNFINSTALL snapd
-sudo ln -s /var/lib/snapd/snap /snap
-echo 'Run "sudo snap install termius-app" to install termius'
-
-#echo "Installing yubikey-touch-detector"
-#sudo mkdir /etc/yubikey-touch-detector
-#sudo wget -O /etc/yubikey-touch-detector/service.conf https://p.catgirlsare.sexy/raw/lipexiwapu
-#sudo wget -O /usr/lib/systemd/system/yubikey-touch-detector.service https://p.catgirlsare.sexy/raw/awipokulaw
-#sudo wget -O /usr/bin/yubikey-touch-detector https://alastor.u.catgirlsare.sexy/5PA0P3qW.
-#sudo restorecon -vRF /etc/yubikey-touch-detector
-#sudo restorecon -vRF /usr/bin/yubikey-touch-detector
-#sudo restorecon -vRF /usr/lib/systemd/system/yubikey-touch-detector.service
-#sudo systemctl daemon-reload
-#sudo systemctl enable --now yubikey-touch-detector.service
-
-echo "Installing TLP and necessary deps"
-DEPS1="kernel-devel akmod-acpi_call akmod-tp_smapi"
-TLP="tlp tlp-rdw"
-TLPKEY="RPM-GPG-KEY-tlp-fedora-32-primary"
-$DNFINSTALL https://repo.linrunner.de/fedora/tlp/repos/releases/tlp-release.fc$(rpm -E %fedora).noarch.rpm
-wget https://repo.linrunner.de/fedora/tlp/repos/RPM-GPG-KEY-tlp-fedora-32-primary
-sudo rpm -v --import $TLPKEY
-rm RPM-GPG-KEY-tlp-fedora-32-primary
-$DNFINSTALL $DEPS1
-$DNFINSTALL $TLP
-sudo systemctl enable --now tlp.service
-
 echo "Installing media codecs (gstreamer, LAME, h264, etc)"
 $DNFINSTALL gstreamer1-plugins-{bad-\*,good-\*,base} gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel
 $DNFINSTALL lame\* --exclude=lame-devel
@@ -99,7 +35,7 @@ sudo dnf group -y upgrade --with-optional Multimedia
 
 echo "Installing Spotify"
 flatpak remote-add --if-not-exists flathub 'https://flathub.org/repo/flathub.flatpakrepo'
-sudo flatpak install -y flathub com.spotify.Client
+flatpak install -y flathub com.spotify.Client
 
 echo "Installing WINE and winetricks"
 WINERPM="wine winetricks"
@@ -125,41 +61,11 @@ echo "Installing yubikey software"
 UTILS2="yubioath-desktop ykpers ykclient yubikey-manager libyubikey"
 $DNFINSTALL $UTILS2
 
-echo "Installing oh-my-zsh"
-echo "Hit yes on setting as default shell, then exit to continue script"
-sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
-
-echo "Installing powerlevel10k w/instant prompt support"
-wget -P /tmp "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf"
-wget -P /tmp "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf"
-wget -P /tmp "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf"
-wget -P /tmp "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf"
-sudo mkdir "/usr/share/fonts/Meslo NF"
-sudo mv /tmp/*.ttf "/usr/share/fonts/Meslo NF"
-sudo /sbin/restorecon -v "/usr/share/fonts/Meslo NF/MesloLGS NF Bold Italic.ttf"
-sudo /sbin/restorecon -v "/usr/share/fonts/Meslo NF/MesloLGS NF Bold.ttf"
-sudo /sbin/restorecon -v "/usr/share/fonts/Meslo NF/MesloLGS NF Regular.ttf"
-sudo /sbin/restorecon -v "/usr/share/fonts/Meslo NF/MesloLGS NF Italic.ttf"
-sudo fc-cache -v
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-echo "//========================================================="
-echo "// Run "p10k configure" in zsh and enable instant prompt //"
-echo "// Set ZSH_THEME to powerlevel10k/powerlevel10k in zshrc"
-echo "//========================================================="
-	echo "Installing zsh-autosuggestions and zsh-syntax-highlighting"
-	ZSHTOOLS="zsh-autosuggestions zsh-syntax-highlighting"
-	$DNFINSTALL $ZSHTOOLS
-	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-	echo "//========================================================="
-	echo "Add zsh-syntaxhighlighting zsh-autosuggestions and git to zshrc plugins (and vscode :D)"
-	echo "//========================================================="
 echo "Installing GPG and importing public key"
 UTILS3="gnupg"
-PUBLICKEY="https://haste.cypherbot.org/raw/wuruwopefu"
+PUBLICKEY="https://gist.githubusercontent.com/linuxfur/4cb8d34f1072fdc2708e5956bc19f890/raw/02a0ce6cc9afa513855a35f483e41ff7aa08f86c/public.gpg"
 MASTERKEY="0x9507D5DCD1997DE9"
 SSHKEYID="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEifx7YeDpkWMNnnQzJ3kSNj8yBBrn7kkOi++Ge2bvE4 cardno:000611335101"
-SSHCONFIG="https://haste.cypherbot.org/raw/alapayelaf"
 
 $DNFINSTALL $UTILS3
 wget -O $MASTERKEY.txt $PUBLICKEY
@@ -167,7 +73,6 @@ gpg --import $MASTERKEY.txt
 echo $SSHKEYID > $HOME/.ssh/id_ed25519_yubikey.pub
 chmod 0644 $HOME/.ssh/id_ed25519_yubikey.pub
 restorecon -vF $HOME/.ssh/id_ed25519_yubikey.pub
-wget -O $HOME/.ssh/config $SSHCONFIG
 echo "//=====================================//"
 echo "//=====================================//"
 echo "// trust; 5; y; quit to ultimatley trust for yubikey GPG to work //"
@@ -220,8 +125,8 @@ echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to 
 echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
 echo "//============================//"
 
-echo "purging Midori and Firefox (security), installing Google Chrome Beta"
-BROWSERS="google-chrome-beta"
+echo "purging Midori and Firefox (security), installing Google Chrome"
+BROWSERS="google-chrome"
 DRMUTILS=libva-utils
 
 $DNFREMOVE midori firefox
@@ -230,7 +135,7 @@ $DNFINSTALL https://dl.google.com/linux/direct/$CHROMERPM
 $DNFINSTALL $BROWSERS $DRMUTILS
 
 echo "SELinux and Chromium SUID sandboxing"
-setsebool -P unconfined_chrome_sandbox_transition 0
+sudo setsebool -P unconfined_chrome_sandbox_transition 0
 
 echo "Removing xfce4-terminal"
 $DNFREMOVE xfce4-terminal
@@ -344,34 +249,13 @@ net.ipv6.conf.default.accept_ra=0
 net.ipv6.conf.all.accept_redirects=0
 net.ipv6.conf.default.accept_redirects=0' > /etc/sysctl.d/99-sysctl.conf
 
-
-echo "Removing GNOME Terminal (doesn't even with with my SELinux setup, tilix does)"
-$DNFREMOVE gnome-terminal
-
-#echo "Setting $USER as staff_u"
-#sudo semanage login -a -s staff_u $USER
-#echo 'BE SURE TO sudo visudo AND SET %wheel AS ROLE=sysadm_r'
-
-echo "//====================================//"
-echo "Set PATH to include $HOME/platform-tools"
-echo "//====================================//"
-
 echo "//====================================//"
 echo "//====================================//"
 echo "//====================================//"
 echo "// POST INSTALL NOTES //"
 echo "//====================================//"
 
-echo 'Set PATH to include $HOME/platform-tools'
-echo 'Run "sudo snap install termius-app" to install termius'
 echo 'Edit /etc/dnf/automatic.conf if necessary'
-echo "Run "p10k configure" in zsh and enable instant prompt"
-echo "Set ZSH_THEME to powerlevel10k/powerlevel10k in zshrc"
-echo "Add zsh-syntax-highlighting and zsh-autosuggestions to zshrc plugins (and vscode :D)"
 echo "Remember to source rc file, plug in yubikey, and run gpg --card-status to ensure GPG sees the card"
 echo '!! If you get agent refused operation errors, run this command: gpg-connect-agent updatestartuptty /bye'
 echo "setup VMWare Player for CTF rounds by running the bundle in a shell"
-echo 'Run sudo semodule -i chrome.pp to load Chrome Sandbox SELinux policy'
-#echo 'install yucky VirtualBox NOT using the keyword, but by the version e.g. VirtualBox-2.3 see dnf list VirtualBox'
-#echo 'BE SURE TO sudo visudo AND SET %wheel AS ROLE=sysadm_r'
-#echo 'BE SURE TO RELABEL SYSTEM WITH restorecon -vRF /'
